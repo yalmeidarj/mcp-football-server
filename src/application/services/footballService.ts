@@ -14,10 +14,10 @@ export class FootballService {
       date: item.fixture.date,
       venue: item.fixture.venue.name,
       home: {
-        id: item.home.id,
-        name: item.home.name,
-        logo: item.home.logo,
-        winner: item.home.winner,
+        id: item.teams.home.id,
+        name: item.teams.home.name,
+        logo: item.teams.home.logo,
+        winner: item.teams.home.winner,
       },
       away: {
         id: item.teams.away.id,
