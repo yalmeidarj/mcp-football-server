@@ -9,10 +9,10 @@ export class FootballService {
 
   async getFixturesByDate(date: string): Promise<FixtureDTO[]> {
     const data = await this.api.fetchFixturesByDate(date);
-    return data.response.map((item: FixtureDTO) => ({
-      fixtureId: item.fixtureId,
-      date: item.date,
-      venue: item.venue,
+    return data.response.map((item: any) => ({
+      fixtureId: item.fixture.id,
+      date: item.fixture.date,
+      venue: item.fixture.venue.name,
       home: {
         id: item.home.id,
         name: item.home.name,
@@ -20,16 +20,16 @@ export class FootballService {
         winner: item.home.winner,
       },
       away: {
-        id: item.away.id,
-        name: item.away.name,
-        logo: item.away.logo,
-        winner: item.away.winner,
+        id: item.teams.away.id,
+        name: item.teams.away.name,
+        logo: item.teams.away.logo,
+        winner: item.teams.away.winner,
       },
       score: {
         fulltime: item.score.fulltime,
         halftime: item.score.halftime,
       },
-      status: item.status,
+      status: item.fixture.status.short,
     })) as FixtureDTO[];
   }
 
