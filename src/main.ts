@@ -1,34 +1,33 @@
+
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { NWSApiService } from "./infrastructure/services/NWSApiService.js";
-import { WeatherService } from "./application/services/WeatherService.js";
-import { WeatherToolsController } from "./interface/controllers/WeatherToolsController.js";
+import { FootballToolsController } from "./interface/controllers/footballToolsController.js";
+import { FootballApiService } from "./infrastructure/services/footballApiService.js";
+import { FootballService } from "./application/services/footballService.js";
+
 
 async function main() {
-  // Criação da instância do servidor MCP
   const server = new McpServer({
-    name: "weather",
-    version: "1.0.0",
+    name: "football",
+    version: "0.1.0",
     capabilities: {
       resources: {},
-      tools: {},
+      tools: {}, // habilita registerTool()
     },
   });
 
-  // Inicializando serviços e controladores
-  const nwsApiService = new NWSApiService();
-  const weatherService = new WeatherService(nwsApiService);
+  // injeta serviços e registra ferramentas
+  const api = new FootballApiService();
+  const footballService = new FootballService(api);
+  new FootballToolsController(server, footballService);
 
-  // Controlador que registra as ferramentas
-  new WeatherToolsController(server, weatherService);
-
-  // Configurando e iniciando o servidor
+  // transport stdio
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("Weather MCP Server running on stdio");
+  console.error("⚽ MCP Football Server rodando em STDIO");
 }
 
-main().catch((error) => {
-  console.error("Fatal error in main():", error);
+main().catch((err) => {
+  console.error("Fatal:", err);
   process.exit(1);
 });

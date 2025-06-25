@@ -1,10 +1,14 @@
 {
-  "name": "mcp-server-sample",
+  "name": "mcp-football-server",
   "version": "1.0.0",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc && chmod 755 build/main.js"
+    "build": "tsc && chmod 755 build/main.js",
+    "dev": "ts-node src/main.ts",
+    "start": "node build/main.js"
+  },
+  "bin": {
+    "football": "build/main.js"
   },
   "keywords": [],
   "author": "",
@@ -12,16 +16,16 @@
   "description": "",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.9.0",
+    "dotenv": "^16.5.0",
+    "node-fetch": "^3.3.2",
     "zod": "^3.24.2"
   },
   "devDependencies": {
-    "@types/node": "^22.14.0",
+    "@types/node": "^22.15.33",
+    "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   },
   "type": "module",
-  "bin": {
-    "weather": "./build/main.js"
-  },
   "files": [
     "build"
   ]
