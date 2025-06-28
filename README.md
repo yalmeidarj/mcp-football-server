@@ -1,66 +1,73 @@
 # MCP Football Server
 
-This project implements a small [Model Context Protocol](https://github.com/modelcontextprotocol) (MCP) server that exposes football (soccer) data through simple tools. The server retrieves data from the [API-Football](https://www.api-football.com) service and is written in TypeScript.
+**MCP Football Server** is a lightweight [Model Context Protocol](https://github.com/modelcontextprotocol) (MCP) tool server that provides football (soccer) data to clients and AI assistants via API-Football. Designed for sports analysts and general users, it enables real-time access to fixtures, standings, teams, players, and more.
 
 ## Features
+MCP Football Server exposes a suite of tools that an AI or application can call to fetch football data. Key features include:
 
-- **get-fixtures-by-date** &ndash; list all fixtures for a specific date.
-- **get-team** &ndash; basic information about a team by its id.
-- **get-standings** &ndash; league standings for a given season.
+- Fixtures by date  
+- League standings  
+- Team and player info  
+- Transfers, injuries, head-to-head  
+- Easy integration with MCP clients
 
-These tools are registered when the server starts and communicate over MCP\'s standard IO transport.
+## Setup (Local Server)
 
-## Setup
-
-1. **Install dependencies**
-
+1. **Clone & install dependencies**  
    ```bash
+   git clone https://github.com/yalmeidarj/mcp-football-server.git
+   cd mcp-football-server
    npm install
    ```
 
-2. **Environment variables**
-
-   Copy the example file and fill in your [RapidAPI](https://rapidapi.com/) credentials:
-
+2. **Start in development**  
    ```bash
-   cp src/.env.example .env
-   # edit .env and provide RAPIDAPI_KEY and RAPIDAPI_HOST values
+   npm run dev
    ```
 
-   The server uses these variables to authenticate with API-Football.
+3. **Or build for production**  
+   ```bash
+   npm run build
+   npm start
+   ```
 
-## Development
+The server communicates via STDIN/STDOUT using MCP JSON-RPC.
+The build step transpiles source files into the build/ directory, and npm start runs the compiled server
+GitHub.
+After building, you can also use the football command (defined as a binary in the package) to start the server
+GitHub.
 
-To run the TypeScript code directly, use:
+## Client Setup (Claude Desktop)
 
-```bash
-npm run dev
-```
+To use with Claude Desktop:
 
-This starts the server with `ts-node` and watches standard input/output for MCP messages.
+- Add the following to your `claude_desktop_config.json`:
+  ```json
+  {
+    "mcpServers": {
+      "football": {
+        "command": "node",
+        "args": ["<path_to>/build/main.js"],
+        "env": {
+          "RAPIDAPI_KEY": "<your_rapidapi_key>",
+          "RAPIDAPI_HOST": "api-football-v1.p.rapidapi.com"
+        }
+      }
+    }
+  }
+  ```
 
-## Production
+Claude will launch the server automatically and use its tools for football-related queries.
 
-Build the project and execute the generated JavaScript:
+## Tech Stack
 
-```bash
-npm run build
-npm start
-```
-
-The `build` script compiles files from `src/` to `build/` using `tsc`. The resulting binary can also be invoked via the `football` command defined in `package.json`.
-
-## Project Structure
-
-```
-src/
-  application/    # business logic services
-  domain/         # data transfer objects
-  infrastructure/ # external API calls
-  interface/      # MCP tool controllers
-  main.ts         # server entry point
-```
+- **Node.js** + **TypeScript**
+- **MCP SDK** for stdio-based tool serving
+- **node-fetch** for API calls
+- **Zod** for parameter validation
 
 ## License
 
-This project is released under the ISC license.
+Released under the ISC License.
+
+---
